@@ -28,7 +28,8 @@ node {
 
             // need to pull out assigned username
             rmsg = bat returnStdout: true, script: "${toolbelt}/sfdx force:org:create --definitionfile config/project-scratch-def.json --json --setdefaultusername"
-            println rmsg
+            println "This is the message: ${rmsg}. End of message"
+            println rmsg.split('username":"')[1].replace('}','').replace('"','')
             //def jsonSlurper = new JsonSlurperClassic()
             //def robj = jsonSlurper.parseText(rmsg)
             //if (robj.status != "ok") { error 'org creation failed: ' + robj.message }
