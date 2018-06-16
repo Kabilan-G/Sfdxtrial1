@@ -1,5 +1,9 @@
 #!groovy
 import groovy.json.JsonSlurperClassic
+def shell(command) {
+    return bat(returnStdout: true, script: "sh -x -c \"${command}\"").trim()
+}
+
 node {
 
     def BUILD_NUMBER=env.BUILD_NUMBER
@@ -10,11 +14,6 @@ node {
     def SFDC_HOST = env.SFDC_HOST_DH
     def JWT_KEY_CRED_ID = env.JWT_CRED_ID_DH
     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY_DH
-
-    def shell(command) {
-        return bat(returnStdout: true, script: "sh -x -c \"${command}\"").trim()
-    }
-    
     def toolbelt = tool 'toolbelt'
 
     stage('checkout source') {
