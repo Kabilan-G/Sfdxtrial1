@@ -31,6 +31,13 @@ node {
             SFDC_USERNAME=rmsg.split('username":"')[1].replace('}','').replace('"','')
         }
 
+        stage('Delete scratch org') {
+            rc = bat returnStatus: true, script: "sfdx force:org:delete -u ${SFDC_USERNAME}"
+            if (rc != 0) {
+                error 'Delete scratch org failed'
+            }
+        }
+        
         stage('Push To Test Org') {
             rc = bat returnStatus: true, script: "${toolbelt}/sfdx force:source:push --targetusername ${SFDC_USERNAME}"
             if (rc != 0) {
@@ -42,7 +49,7 @@ node {
                 error 'permset:assign failed'
             }
         }
-
+        
         stage('Run Apex Test') {
             sh "mkdir -p ${RUN_ARTIFACT_DIR}"
             timeout(time: 120, unit: 'SECONDS') {
